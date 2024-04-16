@@ -1,0 +1,90 @@
+<!-- page4.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 문자 집합 및 뷰포트에 대한 메타 태그 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 페이지 제목 -->
+    <title>페이지 4</title>
+    <!-- 부트스트랩 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- 부트스트랩 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">주식코드검색</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">홈</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 주요 내용 컨테이너 -->
+    <div class="container mt-4">
+        <header>
+            <!-- 제목이 있는 헤더 -->
+            <h1>주식 종목 검색</h1>
+        </header>
+        <!-- 주식 검색을 위한 폼 -->
+        <form id="searchForm">
+            <label for="company_name">회사 이름:</label>
+            <!-- 회사 이름을 입력할 입력 필드 -->
+            <input type="text" id="company_name" name="company_name" onkeydown="if(event.keyCode == 13) { searchStock(); return false; }">
+            <!-- 검색을 트리거하는 버튼 -->
+            <button type="button" class="btn btn-primary" onclick="searchStock()">검색</button>
+        </form>
+        <!-- 검색 결과를 표시할 디브 -->
+        <div id="searchResult" class="mt-4">
+            <!-- 검색 결과가 여기에 표시될 것입니다. -->
+        </div>
+    </div>
+
+    <!-- 주식 검색을 위한 JavaScript 코드 -->
+    <script>
+        function searchStock() {
+            // 사용자가 입력한 회사 이름 가져오기
+            var companyName = document.getElementById('company_name').value;
+
+            // 주식 코드를 가져오기 위해 서버에 POST 요청 보내기
+            fetch('http://127.0.0.1:5000/get_stock_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ company_name: companyName })
+            })
+            // 서버에서의 응답 처리
+            .then(response => response.json())
+            .then(data => {
+                var searchResultDiv = document.getElementById('searchResult');
+                // 응답에 에러가 있는지 확인
+                if (data.error) {
+                    // 에러가 있으면 오류 메시지 표시
+                    searchResultDiv.innerHTML = '<p class="text-danger">' + data.error + '</p>';
+                } else {
+                    // 종목 코드와 회사 이름을 함께 표시
+                    var html = '<p><strong>회사 이름:</strong> ' + data.company_name + '</p>' +
+                               '<p><strong>종목 코드:</strong></p><ul>';
+                    data.stock_codes.forEach(function(stockCode) {
+                        html += '<li>' + stockCode + '</li>';
+                    });
+                    html += '</ul>';
+                    searchResultDiv.innerHTML = html;
+                }
+            })
+            .catch(error => console.error('에러 발생:', error));
+        }
+    </script>
+</body>
+</html>

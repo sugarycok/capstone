@@ -1,0 +1,27 @@
+/* static/style.css */
+header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center; /* 메뉴 항목을 가운데 정렬합니다. */
+}
+
+header nav ul li {
+    display: inline-block; /* 메뉴 항목을 가로로 나열합니다. */
+    margin-right: 20px; /* 각 항목 사이의 간격을 조정합니다. */
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 10px 15px; /* 버튼의 패딩을 설정합니다. */
+    border: 1px solid #333; /* 버튼 테두리를 설정합니다. */
+    border-radius: 5px; /* 버튼 테두리의 굴곡을 조정합니다. */
+    transition: background-color 0.3s, color 0.3s; /* 호버 효과를 위한 transition을 추가합니다. */
+}
+
+header nav ul li a:hover {
+    background-color: #333; /* 호버 시 배경색을 변경합니다. */
+    color: #fff; /* 호버 시 텍스트 색상을 변경합니다. */
+}
